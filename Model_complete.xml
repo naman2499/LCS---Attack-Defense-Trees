@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>// Place global declarations here.
+const int N_BAS=30;
+int cost_company;
+urgent broadcast chan success[N_BAS];
+urgent broadcast chan act[N_BAS];
+urgent broadcast chan fail[N_BAS];
+clock now;
+
+
+broadcast chan c;
+
+const int N_BLOCKED = 1; /* Nr. of blocked attack combinations */
+/* Format of the blocked array:
+ * Each row contains one blocked attack combination.
+ * Each row contains, in order, a value 'n' describing how many BAs are present in this combination, followed by the blocked attack IDs.
+ * Example: { {2, 1, 2}, {4, 2, 3, 4, 5} } blocks the attack combination 1 &amp; 2, and the combination 2 &amp; 3 &amp; 4 &amp; 5.
+ */
+const int blocked[N_BLOCKED][4] = {
+    {2, 2, 9, -1}/*, //Enable to block both attacks with cost 335
+    {2, 7, 3, -1}
+    {2, 7, 4, -1}
+*/
+};
+int blocked_counters[N_BLOCKED] = {0};</declaration><template><name x="5" y="5">BAS</name><parameter> int &amp;maxtime[3], int &amp;mintime[3],int skill, int a,int r,int cc,int id</parameter><declaration>clock t;
+
+clock s;
+bool now_blocked;
+
+void check_blocked(int id)
+{
+    int i;
+    for (i = 0; i &lt; N_BLOCKED; i++) {
+        int j;
+        for (j = 1; j &lt;= blocked[i][0]; j++) {
+            if (blocked[i][j] == id) {
+                if (++blocked_counters[i] == blocked[i][0])
+                    now_blocked = true;
+            }
+        }
+    }
+}</declaration><location id="id0" x="-1272" y="-344"><name x="-1282" y="-374">Unused</name></location><location id="id1" x="8" y="-136"><name x="-8" y="-112">attack_fail</name></location><location id="id2" x="-1056" y="-136"><name x="-1064" y="-120">Init</name></location><location id="id3" x="-17" y="-348"><name x="-27" y="-382">attack_success</name></location><location id="id4" x="-816" y="-544"><name x="-832" y="-584">goal_reached_before</name></location><location id="id5" x="-255" y="-348"><name x="-365" y="-382">Attack_execut_ends</name><committed/></location><location id="id6" x="-816" y="-344"><name x="-901" y="-327">Attack_Execution_begin</name><label kind="invariant" x="-909" y="-302">t&lt;=maxtime[skill]&amp;&amp; cost'==r</label></location><location id="id7" x="-1062" y="-348"><committed/></location><init ref="id2"/><transition><source ref="id7"/><target ref="id0"/></transition><transition><source ref="id2"/><target ref="id7"/><label kind="synchronisation" x="-1112" y="-248">act[id]?</label></transition><transition><source ref="id5"/><target ref="id1"/><label kind="synchronisation" x="-192" y="-256">fail[id]!</label></transition><transition><source ref="id5"/><target ref="id3"/><label kind="guard" x="-168" y="-336">!now_blocked</label><label kind="synchronisation" x="-152" y="-368">success[id]!</label><label kind="assignment" x="-184" y="-352">cost_company+=cc</label></transition><transition><source ref="id6"/><target ref="id4"/><label kind="synchronisation" x="-807" y="-459">c?</label></transition><transition><source ref="id6"/><target ref="id5"/><label kind="guard" x="-648" y="-368">t&gt;=mintime[skill]</label><label kind="assignment" x="-646" y="-340">check_blocked(id)</label></transition><transition><source ref="id7"/><target ref="id6"/><label kind="assignment" x="-1028" y="-340">t:=0,cost+=a</label></transition></template><template><name>OR_gate</name><parameter>int id,int id1,int id2</parameter><location id="id8" x="-656" y="-200"></location><location id="id9" x="-808" y="-200"></location><location id="id10" x="-976" y="-200"><name x="-986" y="-230">Init</name></location><location id="id11" x="331" y="-153"></location><location id="id12" x="-76" y="-153"><committed/></location><location id="id13" x="-450" y="-161"></location><init ref="id10"/><transition><source ref="id8"/><target ref="id13"/><label kind="synchronisation" x="-608" y="-176">act[id2]!</label></transition><transition><source ref="id9"/><target ref="id8"/><label kind="synchronisation" x="-776" y="-224">act[id1]!</label></transition><transition><source ref="id10"/><target ref="id9"/><label kind="synchronisation" x="-920" y="-200">act[id]?</label></transition><transition><source ref="id12"/><target ref="id11"/><label kind="synchronisation" x="34" y="-178">success[id]!</label></transition><transition><source ref="id13"/><target ref="id12"/><label kind="synchronisation" x="-323" y="-51">success[id2]?</label><nail x="-450" y="-25"/><nail x="-68" y="-25"/></transition><transition><source ref="id13"/><target ref="id12"/><label kind="synchronisation" x="-331" y="-340">success[id1]?</label><nail x="-451" y="-314"/><nail x="-77" y="-314"/></transition></template><template><name>goal_reached</name><parameter>int id</parameter><declaration>clock time;</declaration><location id="id14" x="-760" y="-144"><name x="-770" y="-174">Init</name></location><location id="id15" x="255" y="-136"><name x="245" y="-170">goal</name></location><location id="id16" x="-102" y="-136"><committed/></location><location id="id17" x="-425" y="-136"><name x="-560" y="-112">waiting_success</name></location><init ref="id14"/><transition><source ref="id14"/><target ref="id17"/><label kind="synchronisation" x="-648" y="-168">act[id]!</label></transition><transition><source ref="id16"/><target ref="id15"/><label kind="synchronisation" x="-84" y="-153">c!</label></transition><transition><source ref="id17"/><target ref="id16"/><label kind="synchronisation" x="-328" y="-160">success[id]?</label></transition></template><template><name>AND_gate</name><parameter>int id,int id1,int id2</parameter><location id="id18" x="-968" y="-208"></location><location id="id19" x="-664" y="-200"><name x="-888" y="-160">input1_gate_activated</name></location><location id="id20" x="-814" y="-202"></location><location id="id21" x="467" y="-195"></location><location id="id22" x="-144" y="-51"></location><location id="id23" x="204" y="-195"><committed/></location><location id="id24" x="-161" y="-195"></location><location id="id25" x="-510" y="-195"><name x="-704" y="-160">inpu2_gate_activated</name></location><init ref="id18"/><transition><source ref="id18"/><target ref="id20"/><label kind="synchronisation" x="-928" y="-224">act[id]?</label></transition><transition><source ref="id19"/><target ref="id25"/><label kind="synchronisation" x="-632" y="-224">act[id2]!</label></transition><transition><source ref="id20"/><target ref="id19"/><label kind="synchronisation" x="-768" y="-224">act[id1]!</label></transition><transition><source ref="id23"/><target ref="id21"/><label kind="synchronisation" x="289" y="-212">success[id]!</label></transition><transition><source ref="id22"/><target ref="id23"/><label kind="synchronisation" x="-93" y="-76">success[id1]?</label><nail x="127" y="-42"/></transition><transition><source ref="id25"/><target ref="id22"/><label kind="synchronisation" x="-408" y="-76">success[id2]?</label><nail x="-493" y="-51"/></transition><transition><source ref="id24"/><target ref="id23"/><label kind="synchronisation" x="-76" y="-221">success[id2]?</label></transition><transition><source ref="id25"/><target ref="id24"/><label kind="synchronisation" x="-425" y="-221">success[id1]?</label></transition></template><template><name>SAND</name><parameter>int id,int id1,int id2</parameter><location id="id26" x="-1520" y="-192"></location><location id="id27" x="-1520" y="-416"></location><location id="id28" x="-1664" y="-200"><name x="-1680" y="-184">failure_gate</name></location><location id="id29" x="-1696" y="-416"><name x="-1728" y="-408">success_gate</name></location><location id="id30" x="-2032" y="-416"></location><location id="id31" x="-2032" y="-504"></location><location id="id32" x="-2232" y="-424"></location><location id="id33" x="-2384" y="-424"></location><location id="id34" x="-2576" y="-424"></location><init ref="id34"/><transition><source ref="id28"/><target ref="id26"/><label kind="synchronisation" x="-1632" y="-216">fail[id]!</label></transition><transition><source ref="id29"/><target ref="id27"/><label kind="synchronisation" x="-1664" y="-440">success[id]!</label></transition><transition><source ref="id30"/><target ref="id28"/><label kind="synchronisation" x="-1832" y="-352">fail[id2]?</label><nail x="-1664" y="-256"/></transition><transition><source ref="id32"/><target ref="id28"/><label kind="synchronisation" x="-2040" y="-320">fail[id1]?</label></transition><transition><source ref="id30"/><target ref="id29"/><label kind="synchronisation" x="-1928" y="-440">success[id2]?</label></transition><transition><source ref="id31"/><target ref="id30"/><label kind="synchronisation" x="-2088" y="-472">act[id2]!</label></transition><transition><source ref="id32"/><target ref="id31"/><label kind="synchronisation" x="-2200" y="-496">success[id1]?</label></transition><transition><source ref="id33"/><target ref="id32"/><label kind="synchronisation" x="-2352" y="-448">act[id1]!</label></transition><transition><source ref="id34"/><target ref="id33"/><label kind="synchronisation" x="-2520" y="-448">act[id]?</label></transition></template><system>// Place template instantiations here.
+//Max skill=2,Min skill=0
+int BAS_min_time[3]={0,5,15};
+int BAS_max_time[3]={5,15,20};
+
+
+BAS1 = BAS(BAS_max_time,BAS_min_time,2,150,5,1000,1);
+BAS2 = BAS(BAS_max_time,BAS_min_time,1,100,10,0,2);
+BAS3= BAS(BAS_max_time,BAS_min_time,1,200,5,500,3);
+BAS4=BAS(BAS_max_time,BAS_min_time,2,100,5,0,4);
+BAS5=BAS(BAS_max_time,BAS_min_time,0,100,5,100,5);
+BAS6=BAS(BAS_max_time,BAS_min_time,0,100,10,100,6);
+BAS7=BAS(BAS_max_time,BAS_min_time,1,200,5,1000,7);
+
+
+
+SAND1=SAND(8,1,2);
+SAND2=SAND(9,4,5);
+SAND3=SAND(10,3,9);
+SAND4=SAND(11,3,6);
+OR_gate1=OR_gate(12,10,11);
+OR_gate2=OR_gate(13,8,12);
+SAND5=SAND(21,13,7);
+
+
+goal_reached1=goal_reached(21);
+
+// List one or more processes to be composed into a system.
+system BAS1,BAS2,BAS3,BAS4,BAS5,BAS6,BAS7,OR_gate1,OR_gate2,SAND1,SAND2,SAND3,SAND4,SAND5,goal_reached1;
+    </system></nta>

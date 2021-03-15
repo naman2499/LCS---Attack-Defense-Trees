@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+chan act[50] , fail[50], satisfied[50], dissatisfied[50],p_act[50];
+broadcast chan  success[50];
+chan c;
+
+</declaration>
+	<template>
+		<name x="5" y="5">BAS</name>
+		<parameter>int id</parameter>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="-51" y="153">
+			<name x="-68" y="178">initial</name>
+		</location>
+		<location id="id1" x="-51" y="25">
+		</location>
+		<location id="id2" x="153" y="25">
+			<name x="93" y="42">attack_execution_begins</name>
+		</location>
+		<location id="id3" x="153" y="-136">
+			<name x="143" y="-170">goal_reached_before</name>
+		</location>
+		<location id="id4" x="425" y="25">
+			<name x="415" y="-9">attack_execution_ends</name>
+		</location>
+		<location id="id5" x="552" y="-127">
+			<name x="542" y="-161">attack_success</name>
+		</location>
+		<location id="id6" x="595" y="119">
+			<name x="585" y="85">attack_fail</name>
+		</location>
+		<location id="id7" x="-161" y="25">
+			<name x="-187" y="-8">unused_state</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="476" y="59">fail[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="443" y="-68">success[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id4"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="161" y="-68">c?</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-42" y="76">act[id]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>OR</name>
+		<parameter>int id,int id1,int id2</parameter>
+		<location id="id8" x="-656" y="-200">
+		</location>
+		<location id="id9" x="-808" y="-200">
+		</location>
+		<location id="id10" x="-976" y="-200">
+			<name x="-986" y="-230">Init</name>
+		</location>
+		<location id="id11" x="-535" y="-195">
+		</location>
+		<location id="id12" x="-382" y="-314">
+		</location>
+		<location id="id13" x="-374" y="-51">
+		</location>
+		<location id="id14" x="-221" y="-195">
+		</location>
+		<location id="id15" x="-204" y="8">
+		</location>
+		<location id="id16" x="-42" y="8">
+		</location>
+		<init ref="id10"/>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-365" y="-229">success[id2]?</label>
+			<nail x="-314" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-378" y="-199">success[id1]?</label>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="synchronisation" x="-144" y="-17">fail[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-331" y="17">fail[id2]?</label>
+			<nail x="-314" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-306" y="-76">fail[id1]?</label>
+			<nail x="-263" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-323" y="-272">success[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-450" y="-153">fail[id1]?</label>
+			<nail x="-416" y="-153"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-483" y="-72">fail[id2]?</label>
+			<nail x="-501" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-484" y="-229">success[id2]?</label>
+			<nail x="-433" y="-212"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-518" y="-314">success[id1]?</label>
+			<nail x="-493" y="-314"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-629" y="-229">act[id2]!</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-776" y="-224">act[id1]!</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-920" y="-200">act[id]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>goal_reached</name>
+		<parameter>int id</parameter>
+		<declaration>clock time;</declaration>
+		<location id="id17" x="-760" y="-144">
+			<name x="-770" y="-174">Init</name>
+		</location>
+		<location id="id18" x="255" y="-136">
+			<name x="245" y="-170">goal</name>
+		</location>
+		<location id="id19" x="-102" y="-136">
+		</location>
+		<location id="id20" x="-425" y="-136">
+			<name x="-476" y="-119">waiting_success</name>
+		</location>
+		<location id="id21" x="-170" y="-289">
+		</location>
+		<init ref="id17"/>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<label kind="synchronisation" x="-331" y="-238">fail[id]?</label>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id20"/>
+			<label kind="synchronisation" x="-648" y="-168">act[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="34" y="-161">c!</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-328" y="-160">success[id]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>reactive_box</name>
+		<parameter>int id, int pid</parameter>
+		<location id="id22" x="-1020" y="-102">
+		</location>
+		<location id="id23" x="-637" y="-102">
+		</location>
+		<location id="id24" x="-459" y="-102">
+			<name x="-544" y="-85">take_appropriate_reactive_action</name>
+		</location>
+		<location id="id25" x="-833" y="-102">
+		</location>
+		<init ref="id22"/>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id23"/>
+			<label kind="synchronisation" x="-782" y="-119">p_act[pid]!</label>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id25"/>
+			<label kind="synchronisation" x="-960" y="-119">success[id]?</label>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id22"/>
+			<nail x="-459" y="-204"/>
+			<nail x="-1020" y="-213"/>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="synchronisation" x="-619" y="-119">dissatisfied[pid]?</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="-807" y="-51">satisfied[pid]?</label>
+			<nail x="-637" y="-25"/>
+			<nail x="-1020" y="-25"/>
+		</transition>
+	</template>
+	<template>
+		<name>policy</name>
+		<parameter>int pid</parameter>
+		<location id="id26" x="-586" y="-25">
+		</location>
+		<location id="id27" x="-416" y="-25">
+		</location>
+		<location id="id28" x="-136" y="-25">
+			<name x="-178" y="-8">check_guard</name>
+		</location>
+		<location id="id29" x="-17" y="-170">
+			<name x="-27" y="-204">policy_satisfied</name>
+		</location>
+		<location id="id30" x="17" y="119">
+			<name x="-25" y="127">policy_dissatisfied</name>
+		</location>
+		<location id="id31" x="136" y="-34">
+		</location>
+		<init ref="id26"/>
+		<transition>
+			<source ref="id31"/>
+			<target ref="id26"/>
+			<label kind="comments" x="-238" y="-255">update guard</label>
+			<nail x="263" y="-34"/>
+			<nail x="263" y="-263"/>
+			<nail x="-586" y="-272"/>
+		</transition>
+		<transition>
+			<source ref="id30"/>
+			<target ref="id31"/>
+		</transition>
+		<transition>
+			<source ref="id29"/>
+			<target ref="id31"/>
+		</transition>
+		<transition>
+			<source ref="id28"/>
+			<target ref="id30"/>
+			<label kind="synchronisation" x="-153" y="34">dissatisfied[pid]!</label>
+		</transition>
+		<transition>
+			<source ref="id28"/>
+			<target ref="id29"/>
+			<label kind="synchronisation" x="-169" y="-114">satisfied[pid]!</label>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id28"/>
+			<label kind="comments" x="-340" y="-8">check policy guard</label>
+		</transition>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="-535" y="-42">p_act[pid]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>AND</name>
+		<parameter>int id,int id1,int id2</parameter>
+		<location id="id32" x="-968" y="-208">
+		</location>
+		<location id="id33" x="-664" y="-200">
+			<name x="-888" y="-160">input1_gate_activated</name>
+		</location>
+		<location id="id34" x="-814" y="-202">
+		</location>
+		<location id="id35" x="467" y="-195">
+		</location>
+		<location id="id36" x="-144" y="-51">
+		</location>
+		<location id="id37" x="204" y="-195">
+		</location>
+		<location id="id38" x="-161" y="-195">
+		</location>
+		<location id="id39" x="-510" y="-195">
+			<name x="-704" y="-160">inpu2_gate_activated</name>
+		</location>
+		<location id="id40" x="-476" y="-348">
+		</location>
+		<location id="id41" x="-255" y="-340">
+		</location>
+		<init ref="id32"/>
+		<transition>
+			<source ref="id38"/>
+			<target ref="id40"/>
+			<label kind="synchronisation" x="-340" y="-297">fail[id2]?</label>
+		</transition>
+		<transition>
+			<source ref="id36"/>
+			<target ref="id40"/>
+			<label kind="synchronisation" x="-272" y="-136">fail[id1]?</label>
+		</transition>
+		<transition>
+			<source ref="id40"/>
+			<target ref="id41"/>
+			<label kind="synchronisation" x="-458" y="-361">fail[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id39"/>
+			<target ref="id40"/>
+			<label kind="synchronisation" x="-492" y="-250">fail[id2]?</label>
+			<nail x="-408" y="-272"/>
+		</transition>
+		<transition>
+			<source ref="id39"/>
+			<target ref="id40"/>
+			<label kind="synchronisation" x="-493" y="-288">fail[id1]?</label>
+		</transition>
+		<transition>
+			<source ref="id32"/>
+			<target ref="id34"/>
+			<label kind="synchronisation" x="-928" y="-224">act[id]?</label>
+		</transition>
+		<transition>
+			<source ref="id33"/>
+			<target ref="id39"/>
+			<label kind="synchronisation" x="-632" y="-224">act[id2]!</label>
+		</transition>
+		<transition>
+			<source ref="id34"/>
+			<target ref="id33"/>
+			<label kind="synchronisation" x="-768" y="-224">act[id1]!</label>
+		</transition>
+		<transition>
+			<source ref="id37"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="289" y="-212">success[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id36"/>
+			<target ref="id37"/>
+			<label kind="synchronisation" x="-93" y="-76">success[id1]?</label>
+			<nail x="127" y="-42"/>
+		</transition>
+		<transition>
+			<source ref="id39"/>
+			<target ref="id36"/>
+			<label kind="synchronisation" x="-408" y="-76">success[id2]?</label>
+			<nail x="-493" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id38"/>
+			<target ref="id37"/>
+			<label kind="synchronisation" x="-76" y="-221">success[id2]?</label>
+		</transition>
+		<transition>
+			<source ref="id39"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="-425" y="-221">success[id1]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>SAND</name>
+		<parameter>int id,int id1,int id2</parameter>
+		<location id="id42" x="-1520" y="-192">
+		</location>
+		<location id="id43" x="-1520" y="-416">
+		</location>
+		<location id="id44" x="-1664" y="-200">
+			<name x="-1680" y="-184">failure_gate</name>
+		</location>
+		<location id="id45" x="-1696" y="-416">
+			<name x="-1728" y="-408">success_gate</name>
+		</location>
+		<location id="id46" x="-2032" y="-416">
+		</location>
+		<location id="id47" x="-2032" y="-504">
+		</location>
+		<location id="id48" x="-2232" y="-424">
+		</location>
+		<location id="id49" x="-2384" y="-424">
+		</location>
+		<location id="id50" x="-2576" y="-424">
+		</location>
+		<init ref="id50"/>
+		<transition>
+			<source ref="id44"/>
+			<target ref="id42"/>
+			<label kind="synchronisation" x="-1632" y="-216">fail[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id45"/>
+			<target ref="id43"/>
+			<label kind="synchronisation" x="-1664" y="-440">success[id]!</label>
+		</transition>
+		<transition>
+			<source ref="id46"/>
+			<target ref="id44"/>
+			<label kind="synchronisation" x="-1832" y="-352">fail[id2]?</label>
+			<nail x="-1664" y="-256"/>
+		</transition>
+		<transition>
+			<source ref="id48"/>
+			<target ref="id44"/>
+			<label kind="synchronisation" x="-2040" y="-320">fail[id1]?</label>
+		</transition>
+		<transition>
+			<source ref="id46"/>
+			<target ref="id45"/>
+			<label kind="synchronisation" x="-1928" y="-440">success[id2]?</label>
+		</transition>
+		<transition>
+			<source ref="id47"/>
+			<target ref="id46"/>
+			<label kind="synchronisation" x="-2088" y="-472">act[id2]!</label>
+		</transition>
+		<transition>
+			<source ref="id48"/>
+			<target ref="id47"/>
+			<label kind="synchronisation" x="-2200" y="-496">success[id1]?</label>
+		</transition>
+		<transition>
+			<source ref="id49"/>
+			<target ref="id48"/>
+			<label kind="synchronisation" x="-2352" y="-448">act[id1]!</label>
+		</transition>
+		<transition>
+			<source ref="id50"/>
+			<target ref="id49"/>
+			<label kind="synchronisation" x="-2520" y="-448">act[id]?</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+b1 = BAS(1);
+b2= BAS(2);
+b3= BAS(3);
+b4= BAS(4);
+b5= BAS(5);
+
+or1= OR(7,1,2);
+and1= AND(6,4,3);
+sand1 = SAND(8,7,6);
+and2= AND(9,5,8);
+p1 = policy(1);
+rb1 = reactive_box(8,1);
+goal=goal_reached(9);
+// List one or more processes to be composed into a system.
+system b1,b2,b3,b4,b5,or1,and1,and2,p1,rb1,sand1,goal;
+    
+
+</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt;p1.policy_satisfied</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
